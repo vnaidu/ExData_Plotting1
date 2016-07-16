@@ -32,11 +32,14 @@ CheckOrDlData <- function(txtFPath, zipFPath=zipFPathDefault){
 }
 
 ParseData <- function(txtFPath) {
+  txtFPath <- 'Data/household_power_consumption.txt'
   validFPath <- CheckOrDlData(txtFPath)
   dataTmp <- read.table(validFPath, header = T, sep = ';')
   data <- read_delim(validFPath, delim = ';', col_names = T)
-  data$Date %<>% dmy()
-  data$Time <- hms(dataTmp$Time)
+  data$Date <- as.Date(as.character(dataTmp$Date), format="%d/%m/%Y")
+  #data$Time <- as.hms(dataTmp$Time)
+  data$Time <- as.character(dataTmp$Time)
+  data$DateTime <- as.POSIXct(strptime(paste(data$Date, data$Time, sep = " "), format = "%Y-%m-%d %H:%M:%S"))
   return(data)
 }
 
@@ -46,7 +49,7 @@ GetData <- function(txtFPath = txtFPathDefault, allDates = F) {
     return(data)
   } else {
     data %>%
-      filter(Date >= date('2007-02-01'), Date <= date('2007-02-02')) %>%
+      filter(Date >= date('2007-02-01'), Date < date('2007-02-03')) %>%
       return()
   }
 }
