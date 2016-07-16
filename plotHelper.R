@@ -1,6 +1,5 @@
-source("dataHelper.R")
+library(dplyr)
 plotList <- list()
-
 
 getDevConfig <- function(plotName = NULL, defaults = FALSE){
   defaultOptions <- list(name = 'default', filename = '', dirPath = '',
